@@ -1,5 +1,6 @@
 import argparse
 import torch
+torch.cuda.set_per_process_memory_fraction(0.0, device=0)
 
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 from llava.conversation import conv_templates, SeparatorStyle
@@ -21,6 +22,8 @@ def main(args, prompt, image):
     disable_torch_init()
 
     model_name = get_model_name_from_path(args.model_path)
+
+    # maybe here you can set resume_download=True
     tokenizer, model, image_processor, context_len = load_pretrained_model(args.model_path, args.model_base, model_name, args.load_8bit, args.load_4bit, device=args.device)
 
     if 'llama-2' in model_name.lower():
@@ -113,7 +116,6 @@ def get_LLaVA(prompt, image):
 
 
 if __name__ == "__main__":
-    image = Image.open("C:\\LLaVA\\llava\\serve\\im2.jpg").convert('RGB')
+    image = Image.open("C:\\Users\\davin\\PycharmProjects\\real-world-alt-text\\LLaVA\\images\\cross_walk.jpg").convert('RGB')
     result = get_LLaVA("what is in front of me?", image)
     print("THIS IS THE RESULT: ", result)
-
